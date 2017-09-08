@@ -1,0 +1,198 @@
+/* Hours Table Display */
+
+table.hours-table,
+table.hours-table-min {
+  font-size:85%;
+  border:none;
+  tbody {
+    display: block;
+  }
+  display:block;
+  tr.days {
+    display:none;
+  }
+  tr, th {
+    display:block;
+    width:100%;
+  }
+  th, td {
+    padding:10px;
+    border:none;
+    border-bottom:1px solid #e0e0e0;
+  }
+  th {
+    background: #e0e0e0;
+  }
+  .hours-row {
+    th {
+      white-space: normal;
+    }
+    td {
+      display: block;
+    }
+  }
+  td {
+    display:table;
+    width:100%;
+    padding:0;
+    span {
+      display:table-cell;
+      padding:5px;
+      &.day-label {
+        width:120px;
+      }
+      .day-hours {
+        width:100%;
+      }
+    }
+  }
+  .hours-title {
+    display: block;
+    font-weight: bold;
+  }
+  .hours-title-link {
+    display: none;
+  }
+}
+
+
+@media screen and (min-width:768px) {
+  table.hours-table {
+    tbody {
+      display: table-row-group;
+    }
+    tr,
+    tr.days {
+      display: table-row;
+      th {
+        background-color: #e0e0e0;
+        font-weight: bold;
+      }
+    }
+    tr, th {
+      width: auto;
+    }
+    th, td {
+      display: table-cell;
+    }
+    th, td {
+      padding:10px;
+      border:none;
+      border-bottom:1px solid #e0e0e0;
+    }
+    .day {
+      display:none;
+    }
+    tr.hours-row {
+
+      th {
+        background: transparent;
+        // white-space: nowrap;
+        font-weight: bold;
+        display: table-cell;
+        //min-width:120px;
+      }
+      td {
+        display: table-cell;
+      }
+      background-color: #fff;
+      &:nth-child(odd) {
+        background-color: #f5f5f5;
+      }
+    }
+    td {
+      display:table-cell;
+      width:auto;
+      padding:10px;
+      span {
+        display:inline;
+        padding:0;
+        &.day-label {
+          display:none;
+        }
+      }
+      span.day-hours {
+        display: block;
+      }
+    }
+    .hours-title {
+      display: block;
+    }
+    .hours-title-link {
+      display: none;
+    }
+  }
+}
+
+/* Hours Expand Display */
+
+.hours-expand-wrapper {
+  ul, li {
+    list-style: none;
+    list-style-image: none;
+    margin: 0;
+    padding: 0;
+  }
+  li.hours-instance-wrapper {
+
+  }
+  a.hours-expand-link {
+    display: block;
+    font-weight: bold;
+    padding: 5px 0;
+    &:after {
+      font-family: FontAwesome;
+      margin-left:5px;
+      color:rgba(127,127,127,.65);
+    }
+    &.closed:after {
+      content: '\f0fe';
+    }
+    &.expanded:after {
+      content: '\f146';
+    }
+  }
+  span.hours-instance-title {
+    display: block;
+    font-weight: bold;
+    padding: 5px 0;
+  }
+  ul.hours-days {
+    display: none;
+    padding:10px;
+    border:1px solid rgba(127,127,127,.65);
+    li {
+      border-bottom:1px solid rgba(127,127,127,.65);
+      padding:5px 0;
+    }
+    li:last-child {
+      border:none;
+      //padding-bottom: 0;
+    }
+    .hours-day-content {
+      display: table;
+      width:100%;
+      font-size:85%;
+      span {
+        display: table-cell;
+        &.day {
+          padding-right:5px;
+          width:120px;
+        }
+        &.hours {
+          padding-left:5px;
+        }
+      }
+    }
+  }
+  .hours-description {
+    padding-top:10px;
+    margin-top: 10px;
+    border-top:1px solid rgba(127,127,127,.65);
+  }
+}
+
+/* Description/Text */
+.hours-description {
+  font-size: 85%;
+}

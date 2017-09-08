@@ -1,0 +1,59 @@
+<?php
+
+function cu_hours_bundle_schema() {
+  $schema = array();
+  $schema['hours'] = array(
+    'description' => 'The base table for the Hours entity',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary key of the Hours entity',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'Human readable name of the Hours.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+      ),
+      'sunday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'monday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'tuesday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'wednesday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'thursday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'friday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+      'saturday' => array(
+        'description' => 'Hours content.',
+        'type' => 'blob',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}

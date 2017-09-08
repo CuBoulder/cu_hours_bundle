@@ -1,0 +1,51 @@
+/* Hours Table Display */
+table.hours-table, table.hours-table-min { font-size: 85%; border: none; display: block; }
+table.hours-table tbody, table.hours-table-min tbody { display: block; }
+table.hours-table tr.days, table.hours-table-min tr.days { display: none; }
+table.hours-table tr, table.hours-table th, table.hours-table-min tr, table.hours-table-min th { display: block; width: 100%; }
+table.hours-table th, table.hours-table td, table.hours-table-min th, table.hours-table-min td { padding: 10px; border: none; border-bottom: 1px solid #e0e0e0; }
+table.hours-table th, table.hours-table-min th { background: #e0e0e0; }
+table.hours-table .hours-row th, table.hours-table-min .hours-row th { white-space: normal; }
+table.hours-table .hours-row td, table.hours-table-min .hours-row td { display: block; }
+table.hours-table td, table.hours-table-min td { display: table; width: 100%; padding: 0; }
+table.hours-table td span, table.hours-table-min td span { display: table-cell; padding: 5px; }
+table.hours-table td span.day-label, table.hours-table-min td span.day-label { width: 120px; }
+table.hours-table td span .day-hours, table.hours-table-min td span .day-hours { width: 100%; }
+table.hours-table .hours-title, table.hours-table-min .hours-title { display: block; font-weight: bold; }
+table.hours-table .hours-title-link, table.hours-table-min .hours-title-link { display: none; }
+
+@media screen and (min-width: 768px) { table.hours-table tbody { display: table-row-group; }
+  table.hours-table tr, table.hours-table tr.days { display: table-row; }
+  table.hours-table tr th, table.hours-table tr.days th { background-color: #e0e0e0; font-weight: bold; }
+  table.hours-table tr, table.hours-table th { width: auto; }
+  table.hours-table th, table.hours-table td { display: table-cell; }
+  table.hours-table th, table.hours-table td { padding: 10px; border: none; border-bottom: 1px solid #e0e0e0; }
+  table.hours-table .day { display: none; }
+  table.hours-table tr.hours-row { background-color: #fff; }
+  table.hours-table tr.hours-row th { background: transparent; font-weight: bold; display: table-cell; }
+  table.hours-table tr.hours-row td { display: table-cell; }
+  table.hours-table tr.hours-row:nth-child(odd) { background-color: #f5f5f5; }
+  table.hours-table td { display: table-cell; width: auto; padding: 10px; }
+  table.hours-table td span { display: inline; padding: 0; }
+  table.hours-table td span.day-label { display: none; }
+  table.hours-table td span.day-hours { display: block; }
+  table.hours-table .hours-title { display: block; }
+  table.hours-table .hours-title-link { display: none; } }
+/* Hours Expand Display */
+.hours-expand-wrapper ul, .hours-expand-wrapper li { list-style: none; list-style-image: none; margin: 0; padding: 0; }
+.hours-expand-wrapper a.hours-expand-link { display: block; font-weight: bold; padding: 5px 0; }
+.hours-expand-wrapper a.hours-expand-link:after { font-family: FontAwesome; margin-left: 5px; color: rgba(127, 127, 127, 0.65); }
+.hours-expand-wrapper a.hours-expand-link.closed:after { content: '\f0fe'; }
+.hours-expand-wrapper a.hours-expand-link.expanded:after { content: '\f146'; }
+.hours-expand-wrapper span.hours-instance-title { display: block; font-weight: bold; padding: 5px 0; }
+.hours-expand-wrapper ul.hours-days { display: none; padding: 10px; border: 1px solid rgba(127, 127, 127, 0.65); }
+.hours-expand-wrapper ul.hours-days li { border-bottom: 1px solid rgba(127, 127, 127, 0.65); padding: 5px 0; }
+.hours-expand-wrapper ul.hours-days li:last-child { border: none; }
+.hours-expand-wrapper ul.hours-days .hours-day-content { display: table; width: 100%; font-size: 85%; }
+.hours-expand-wrapper ul.hours-days .hours-day-content span { display: table-cell; }
+.hours-expand-wrapper ul.hours-days .hours-day-content span.day { padding-right: 5px; width: 120px; }
+.hours-expand-wrapper ul.hours-days .hours-day-content span.hours { padding-left: 5px; }
+.hours-expand-wrapper .hours-description { padding-top: 10px; margin-top: 10px; border-top: 1px solid rgba(127, 127, 127, 0.65); }
+
+/* Description/Text */
+.hours-description { font-size: 85%; }

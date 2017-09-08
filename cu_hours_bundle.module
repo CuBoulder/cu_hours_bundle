@@ -1,0 +1,229 @@
+<?php
+
+/**
+ * Implements hook_entity_info().
+ */
+function cu_hours_bundle_entity_info() {
+  $info = array();
+  // Our custom video entity needs to be defined here.
+  // See http://drupal.org/node/1026420 and http://drupal.org/node/878804
+  // for more documentation.
+  $info['hours'] = array(
+    // Human readable label.
+    'label' => t('Hours'),
+    // Table for storing entity data, defined in hook_schema().
+    'base table' => 'hours',
+    // This helps Entity API know how to query your custom table.
+    'entity keys' => array(
+      'id' => 'id',
+    ),
+    // This is a uri function provided by the Entity contrib module.
+    // It's a simple wrapper around the uri method in the controller class.
+    'uri callback' => 'entity_class_uri',
+    // These are the default controllers.
+    // 'entity class' => 'Entity',
+    'entity class' => 'Entity',
+    // 'controller class' => 'DrupalDefaultEntityController',
+    // Other options provided by the EntityAPI contrib module:
+    // 'controller class' => 'EntityAPIController ',
+    // 'controller class' => 'EntityAPIControllerExportable',
+    'controller class' => 'EntityAPIController',
+     // The information below is used to extend the EntityDefaultUIController
+
+     'module' => 'cu_hours_bundle',
+     // Access callback to determine permisisons.
+     'access callback' => 'cu_hours_bundle_access_callback',
+     // Tell FieldAPI that fields can be attached to our video entity
+     'fieldable' => TRUE,
+     'bundles' => array(
+        'hours' => array(
+          'label' => t('Hours'),
+          'admin' => array(
+            'path' => 'admin/hours',
+            'access arguments' => array('administer hours'),
+          ),
+        ),
+      ),
+  );
+  return $info;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function cu_hours_bundle_menu() {
+  $items = array();
+  $items['admin/content/hours'] = array(
+    'title' => 'Hours',
+    'page callback' => 'cu_hours_bundle_list',
+    'access arguments' => array('administer hours'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/content/hours/add'] = array(
+    'title' => 'Create Hours',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cu_hours_bundle_edit_form'),
+    'access arguments' => array('administer hours'),
+    'file' => 'cu_hours_bundle.admin.inc'
+  );
+  $items['admin/content/hours/%cu_hours_bundle/edit'] = array(
+    'title' => 'Edit Hours',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cu_hours_bundle_edit_form', 3),
+    'access arguments' => array('administer hours'),
+    'file' => 'cu_hours_bundle.admin.inc'
+  );
+  $items['admin/content/hours/%cu_hours_bundle/delete'] = array(
+    'title' => 'Delete Hours',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('cu_hours_bundle_delete_confirm_form', 3),
+    'access arguments' => array('administer hours'),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function cu_hours_bundle_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // Add action link to 'node/add' on 'admin/content' page.
+  if ($root_path == 'admin/content/hours') {
+    $item = menu_get_item('admin/content/hours/add');
+    if ($item['access']) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function cu_hours_bundle_permission() {
+  return array(
+    'administer hours' => array(
+      'title' => t('Administer Hours'),
+    ),
+  );
+}
+
+/**
+ * Check access permissions for pixel entities.
+ */
+function cu_hours_bundle_access_callback($op, $hours = NULL, $account = NULL) {
+  if (($op == 'view') || user_access('administer hours', $account)) {
+    return TRUE;
+  }
+  else if (user_access('administer hours', $account)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Menu autoloader for /video.
+ */
+function cu_hours_bundle_load($id) {
+  $hours = entity_load('hours', array($id));
+  return array_pop($hours);
+}
+
+function cu_hours_bundle_list() {
+  drupal_set_title('Hours');
+  //$output['description']['#markup'] = '<p>Block Designer Themes give you a quick and easy way to apply designs to blocks.</p>';
+  $query = db_select('hours', 'h');
+  $query->fields('h', array('id', 'title'));
+  $query->orderBy('title', 'ASC');
+  $results = $query->execute()->fetchAll();
+  // Table headers.
+  $header = array(
+    'Hours',
+    'Operations',
+  );
+  $data = array();
+  $path = current_path();
+  // Loop through returned Block Designer Themes.
+  foreach ($results as $result) {
+    // Prepare operations links.
+    $links = array();
+    // Edit link.
+    $links[] = l('Edit', 'admin/content/hours/' . $result->id . '/edit', array('query' => array('destination' => $path)));
+    // Delete link.
+    $links[] = l('Delete', 'admin/content/hours/' . $result->id . '/delete', array('query' => array('destination' => $path)));
+    // Prepare row for table output.
+    $data[] = array(
+      $result->title,
+      join(' | ', $links),
+    );
+  }
+  // Render list of Block Designer Themes as a table.
+  $output['block_themes']['#markup'] = theme('table', array('header' => $header, 'rows' => $data ));
+
+  return $output;
+}
+
+function cu_hours_bundle_delete_confirm_form($form, &$form_state, $hours) {
+  $id = $hours->id;
+  // Always provide entity id in the same form key as in the entity edit form.
+  $form['id'] = array('#type' => 'value', '#value' => $id);
+  $form['message']['#markup'] = '<p>' . t('You are about to delete @name. Are you sure you want to delete?',array('@name' => $hours->title)) . '</p>';
+  $form['#submit'][] = 'cu_hours_bundle_delete';
+  return confirm_form($form, t('Delete @name',array('@name' => $hours->title)), 'admin/content/hours');
+}
+
+function cu_hours_bundle_delete($form) {
+  $id = $form['id']['#value'];
+  entity_delete('hours', $id);
+  drupal_goto('admin/content/hours');
+}
+
+/*
+ * Implements hook_secure_permissions
+ *
+ * Adding permissions for RSS bean
+ */
+function cu_hours_bundle_secure_permissions($role) {
+  $permissions = array(
+    'anonymous user' => array(
+      'view any hours bean',
+    ),
+    'authenticated user' => array(
+      'view any hours bean',
+    ),
+    'administrator' => array(
+      'administer hours',
+      'create any hours bean',
+      'delete any hours bean',
+      'edit any hours bean',
+      'view any hours bean',
+    ),
+    'content_editor' => array(
+      'administer hours',
+      'create any hours bean',
+      'delete any hours bean',
+      'edit any hours bean',
+      'view any hours bean',
+    ),
+    'developer' => array(
+      'administer hours',
+      'create any hours bean',
+      'delete any hours bean',
+      'edit any hours bean',
+      'view any hours bean',
+    ),
+    'site_owner' => array(
+      'administer hours',
+      'create any hours bean',
+      'delete any hours bean',
+      'edit any hours bean',
+      'view any hours bean',
+    ),
+  );
+
+  if (isset($permissions[$role])) {
+    return $permissions[$role];
+  }
+}

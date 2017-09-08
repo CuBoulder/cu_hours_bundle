@@ -1,0 +1,159 @@
+<?php
+/**
+ * @file
+ * Code for the CU Hours Block feature.
+ */
+
+include_once 'cu_hours_block.features.inc';
+
+function cu_hours_block_preprocess_entity(&$vars) {
+  $entity_type = $vars['elements']['#entity_type'];
+  $bundle = $vars['elements']['#bundle'];
+  // Only preprocess block section beans.
+  if ($entity_type == 'bean' && $bundle == 'hours') {
+
+    $element = $vars['elements']['field_hours_collection'];
+
+    $children = array_intersect_key($element, element_children($element));
+
+    $hours = array();
+    $days = array(
+      'sunday' => 0,
+      'monday' => 0,
+      'tuesday' => 0,
+      'wednesday' => 0,
+      'thursday' => 0,
+      'friday' => 0,
+      'saturday' => 0,
+    );
+    foreach ($children as $key => $value) {
+
+      $current = current($value['entity']['field_collection_item']);
+      $entity = $current['field_hours_reference']['#items'][0]['entity'];
+
+      $hours[$key]['meta'] = array(
+        'title' => $entity->title,
+        'id' => $entity->id,
+      );
+      $hours_data = array();
+      $labels_data = array();
+      foreach ($days as $day => $value) {
+        $saved = unserialize($entity->$day);
+        $hours_data[$day] = $saved['content'];
+        $labels_data[$day] = $saved['label'];
+      }
+      foreach ($days as $day => $value) {
+        if (!empty($hours_data[$day])) {
+          $days[$day] = 1;
+        }
+      }
+      $hours[$key]['days'] = $hours_data;
+      $hours[$key]['labels'] = $labels_data;
+    }
+
+
+    $output = array();
+    $display = $vars['field_hours_display'][0]['value'];
+    $description = !empty($vars['field_hours_description']) ? $vars['field_hours_description'][0] : '';
+
+    if ($display == 'table') {
+      $output['#markup'] = theme('cu_hours_block_table', array('vars' => $hours, 'days' => $days, 'description' => $description));
+    }
+    if ($display == 'expand') {
+      $output['#markup'] = theme('cu_hours_block_expand', array('vars' => $hours, 'days' => $days, 'description' => $description, 'configs' => array('expand_first' => $vars['field_hours_expand_first'][0]['value'])));
+    }
+    $vars['content'] = array(
+      'hours' => $output,
+    );
+  }
+}
+
+function cu_hours_block_theme(&$existing, $type, $theme, $path) {
+  $registry = array();
+  $template_dir = drupal_get_path('module', 'cu_hours_block') . '/templates';
+  $registry['cu_hours_block_table'] = array(
+    'template' => 'cu-hours-block-table',
+    'path' => $template_dir,
+    'render element' => 'elements',
+  );
+  $registry['cu_hours_block_expand'] = array(
+    'template' => 'cu-hours-block-expand',
+    'path' => $template_dir,
+    'render element' => 'elements',
+  );
+  return $registry;
+}
+
+function cu_hours_block_display_options() {
+  return array(
+    'table' => 'Table',
+    'expand' => 'Expand',
+  );
+}
+
+function cu_hours_block_days() {
+  $days = array(
+    'sunday' => array(
+      'single' => 'S',
+      'long' => 'Sunday',
+      'short' => 'Sun',
+    ),
+    'monday' => array(
+      'single' => 'M',
+      'long' => 'Monday',
+      'short' => 'Mon',
+    ),
+    'tuesday' => array(
+      'single' => 'T',
+      'long' => 'Tuesday',
+      'short' => 'Tues',
+    ),
+    'wednesday' => array(
+      'single' => 'W',
+      'long' => 'Wednesday',
+      'short' => 'Wed',
+    ),
+    'thursday' => array(
+      'single' => 'R',
+      'long' => 'Thursday',
+      'short' => 'Thurs',
+    ),
+    'friday' => array(
+      'single' => 'F',
+      'long' => 'Friday',
+      'short' => 'Fri',
+    ),
+    'saturday' => array(
+      'single' => 'S',
+      'long' => 'Saturday',
+      'short' => 'Sat',
+    ),
+  );
+  return $days;
+}
+
+function cu_hours_block_form_bean_form_alter(&$form, &$form_state, $form_id) {
+  if (($form['bean']['#value']->type == 'hours')) {
+    $form['field_hours_expand_first']['#states'] =  array(
+      'visible' => array(
+        ':input[name="field_hours_display[und]"]' => array('value' => 'expand'),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter.
+ *
+ * Add States to expandable form when used in inline entity form.
+ */
+function cu_hours_block_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+
+  if ($entity_form['#entity']->type == 'hours') {
+    $entity_form['field_hours_expand_first']['#states'] = array(
+      'visible' => array(
+        '.field-name-field-hours-display :input' => array('value' => 'expand'),
+      ),
+    );
+  }
+}

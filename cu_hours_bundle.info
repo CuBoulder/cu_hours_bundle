@@ -1,0 +1,8 @@
+name = CU Hours Bundle
+core = 7.x
+package = CU-Hours-Bundle
+version = 7.x-1.0-beta1
+
+stylesheets[all][] = css/cu-hours-bundle.css
+
+dependencies[] = cu_hours_block
