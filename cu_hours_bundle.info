@@ -1,7 +1,8 @@
 name = CU Hours Bundle
 core = 7.x
+description = Create an hours of operation block for your site.
 package = CU-Hours-Bundle
-version = 7.x-1.0-beta1
+version = 7.x-1.0-beta2
 
 stylesheets[all][] = css/cu-hours-bundle.css
 
