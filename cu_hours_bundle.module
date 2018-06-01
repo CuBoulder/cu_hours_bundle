@@ -214,6 +214,20 @@ function cu_hours_bundle_secure_permissions($role) {
       'edit any hours bean',
       'view any hours bean',
     ),
+    'edit_my_content' => array(
+      'view any hours bean',
+    ),
+    'edit_only' => array(
+      'edit any hours bean',
+      'view any hours bean',
+    ),
+    'site_editor' => array(
+      'administer hours',
+      'create any hours bean',
+      'delete any hours bean',
+      'edit any hours bean',
+      'view any hours bean',
+    ),
     'site_owner' => array(
       'administer hours',
       'create any hours bean',
